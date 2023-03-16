@@ -6,7 +6,11 @@
           <th colspan="4" class="px-3 text-white font-weight-normal">
             Vehicle
           </th>
-          <!--<th colspan="3" class="px-3 text-white font-weight-normal">Advertised Price</th>-->
+          <!-- Edit -->
+          <th colspan="3" class="px-3 text-white font-weight-normal">
+            Advertised Price
+          </th>
+          <!-- Edit ends -->
           <th colspan="3" class="px-3 text-white font-weight-normal">
             Buckets Price
           </th>
@@ -40,27 +44,33 @@
       </thead>
       <bid-config-table-loader v-if="!hasOptions" :cols="10" />
       <tbody is="transition-group" name="fade" class="bid-config-table">
-        <template v-for="option in sortedOptions">
-          <!-- <bid-config-table-model
-            :key="option.year + option.model"
-            :option="option"
-            :configurations="getConfigurations(option)"
-            :toggled="modelHidden(option.year + option.model)"
-            :disabled="disabled"
-            @toggle-hide="toggle"
-            @update-config-many="updateConfigMany"
-          /> -->
-          <bid-config-table-trim
-            v-for="trim in option.trims"
-            v-show="!modelHidden(option.year + option.model)"
-            :key="option.model + trim.style_id"
-            :trim="trim"
-            :configuration="findConfiguration(trim.style_id)"
-            :data-model="option.year + option.model"
-            :disabled="disabled"
-            @update-config="updateConfig"
-          />
+        <!-- Edit -->
+        <template>
+          <div>
+            <bid-config-table-model
+              v-for="option in sortedOptions"
+              :key="option.year + option.model"
+              :option="option"
+              :configurations="getConfigurations(option)"
+              :toggled="modelHidden(option.year + option.model)"
+              :disabled="disabled"
+              @toggle-hide="toggle"
+              @update-config-many="updateConfigMany"
+            />
+
+            <bid-config-table-trim
+              v-for="trim in option.trims"
+              v-show="!modelHidden(option.year + option.model)"
+              v-bind:key="option.model + trim.style_id"
+              :trim="trim"
+              :configuration="findConfiguration(trim.style_id)"
+              :data-model="option.year + option.model"
+              :disabled="disabled"
+              @update-config="updateConfig"
+            />
+          </div>
         </template>
+        <!-- Edit end -->
       </tbody>
     </table>
   </div>
@@ -75,7 +85,7 @@
   import { exists } from '@/utilities'
 
   // Components
-  // import BidConfigTableModel from '@/components/dealer/BidConfigTableModel'
+  import BidConfigTableModel from '@/components/dealer/BidConfigTableModel'
   import BidConfigTableTrim from '@/components/dealer/BidConfigTableTrim'
   import BidConfigTableLoader from '@/components/dealer/BidConfigTableLoader'
 
@@ -86,7 +96,7 @@
     name: 'BidConfigTable',
     components: {
       BidConfigTableLoader,
-      // BidConfigTableModel,
+      BidConfigTableModel,
       BidConfigTableTrim
     },
     props: {
@@ -113,6 +123,7 @@
         return exists(this.sortedOptions)
       }
     },
+    // Edit
     provide: function () {
       return {
         discountValuesConst: {
@@ -142,15 +153,11 @@
               return _currency(invoice - this[name], { precision: 0 }).format(
                 true
               )
-            default:
-              return _currency(msrp - this[name] * msrp * (1 / 100), {
-                precision: 0
-              }).format(true)
           }
-        },
-        disabled: this.disabled
+        }
       }
     },
+    // Edit ends
     methods: {
       ...mapActions([
         actor.UPDATE_BID_CONFIG_BY_STYLE_ID,
@@ -223,8 +230,10 @@
     cursor: pointer;
   }
 
-  /*table.fixed {*/
-  /*  height: 1128px;*/
-  /*  display: -moz-groupbox;*/
-  /*}*/
+  /* Edit */
+  table.fixed {
+    height: 1128px;
+    display: -moz-groupbox;
+  }
+  /* Edit ends */
 </style>

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const base = 'api'
-const host = 'http://localhost:8888'
+const host = 'http://localhost:8000'
 const version = 'v1'
 const endpoint = resource => `${host}/${base}/${version}/${resource}`
 

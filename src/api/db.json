@@ -1,4 +1,41 @@
 {
+  "authenticate": [
+    {
+      "id": 1,
+      "username": "johndoe",
+      "password": "secretpassword"
+    },
+    {
+      "username": "johndoe",
+      "password": "secretpassword",
+      "id": 2
+    },
+    {
+      "username": "happy",
+      "password": "gilmore",
+      "id": 3
+    },
+    {
+      "username": "happy",
+      "password": "gilmore",
+      "id": 4
+    },
+    {
+      "username": "frank",
+      "password": "castle",
+      "id": 5
+    },
+    {
+      "username": "aj",
+      "password": "shannon",
+      "id": 6
+    },
+    {
+      "username": "a",
+      "password": "b",
+      "id": 7
+    }
+  ],
   "index": [
     {
       "id": 1,

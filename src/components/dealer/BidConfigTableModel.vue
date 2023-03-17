@@ -17,29 +17,65 @@
     </td>
     <td></td>
     <td></td>
-    <!--    <td>-->
-    <!--      <label>-->
-    <!--        <currency-input-->
-    <!--            v-bind="{ currency: 'USD', precision: 0, distractionFree: true, valueAsInteger: true }"-->
-    <!--            v-model.number="listing_discount"-->
-    <!--            class="model-listing-discount-value form-control form-control-sm"-->
-    <!--            :placeholder="listing_placeholder"-->
-    <!--            :disabled="disabled"/>-->
-    <!--      </label>-->
-    <!--    </td>-->
-    <!--    <td>-->
-    <!--      <label>-->
-    <!--        <select v-model="listing_discount_type"-->
-    <!--                class="model-listing-discount-type form-control form-control-sm p-0" :disabled="disabled" >-->
-    <!--          <option v-for="val in discountValuesConst" :value="val" :key="'listing'+val">{{ val }}</option>-->
-    <!--        </select>-->
-    <!--      </label>-->
-    <!--    </td>-->
-    <!--    <td></td>-->
+    <!-- Edit below -->
+    <td>
+      <label v-if="listing_discount_type_value === '% Off MSRP'">
+        <input
+          v-model.number="listing_discount_value"
+          class="model-listing-discount-value form-control form-control-sm"
+          :placeholder="listing_placeholder"
+          :disabled="disabled"
+          type="number"
+          min="0"
+          max="100"
+        />
+        %
+      </label>
+      <label v-else>
+        <currency-input
+          v-bind="{
+            currency: 'USD',
+            precision: 0,
+            distractionFree: true,
+            valueAsInteger: true
+          }"
+          v-model.number="listing_discount_value"
+          class="model-listing-discount-value form-control form-control-sm"
+          :placeholder="listing_placeholder"
+          :disabled="disabled"
+        />
+      </label>
+    </td>
     <td>
       <label>
+        <select
+          v-model="listing_discount_type_value"
+          class="model-listing-discount-type form-control form-control-sm p-0"
+          :disabled="disabled"
+        >
+          <option value="% Off MSRP">Percentage</option>
+          <option value="USD Off MSRP">Amount</option>
+        </select>
+      </label>
+    </td>
+    <td></td>
+    <!-- Edit end -->
+    <td>
+      <label v-if="bucket_discount_type_value === '% Off MSRP'">
+        <input
+          v-model.number="bucket_discount_value"
+          class="model-bucket-discount-value form-control form-control-sm"
+          :placeholder="bucket_placeholder"
+          :disabled="disabled"
+          type="number"
+          min="0"
+          max="100"
+        />
+        %
+      </label>
+      <label v-else>
         <currency-input
-          v-model.number="bucket_discount"
+          v-model.number="bucket_discount_value"
           v-bind="{
             currency: 'USD',
             precision: 0,
@@ -50,34 +86,17 @@
           :placeholder="bucket_placeholder"
           :disabled="disabled"
         />
-        <!-- <input
-          v-model.number="bucket_discount"
-          v-bind="{
-            currency: 'USD',
-            precision: 0,
-            distractionFree: true,
-            valueAsInteger: true
-          }"
-          class="model-bucket-discount-value form-control form-control-sm"
-          :placeholder="bucket_placeholder"
-          :disabled="disabled"
-        />-->
       </label>
     </td>
     <td>
       <label>
         <select
-          v-model="bucket_discount_type"
+          v-model="bucket_discount_type_value"
           class="model-bucket-discount-type form-control form-control-sm p-0"
           :disabled="disabled"
         >
-          <option
-            v-for="val in discountValuesConst"
-            :key="'bucket' + val"
-            :value="val"
-          >
-            {{ val }}
-          </option>
+          <option value="% Off MSRP">Percentage</option>
+          <option value="USD Off MSRP">Amount</option>
         </select>
       </label>
     </td>
@@ -86,9 +105,6 @@
 </template>
 
 <script>
-  // TODO: If the user select % discount type,
-  // the inputs need to change from currency to % input
-
   // Core
   import { actor, get } from '@/store/modules/dealer/constants'
   import { createNamespacedHelpers } from 'vuex'
@@ -113,7 +129,8 @@
         listing_discount_value: null,
         bucket_discount_value: null,
         listing_discount_type_value: '% Off MSRP',
-        bucket_discount_type_value: '% Off MSRP'
+        bucket_discount_type_value: '% Off MSRP',
+        listing_discount_percent: null // add this line
       }
     },
     inject: ['buildConfigObject', 'computeMinPrice', 'discountValuesConst'],
@@ -190,20 +207,12 @@
     },
     methods: {
       ...mapActions([actor.UPDATE_BID_CONFIG_BY_STYLE_ID]),
-      getDiscountType(name) {
-        const hasConfigs = exists(this.configurations)
-        const types = this.configurations.map(config => config[name].type)
-        const refs = this.configurations.map(config => config[name].ref)
-        if (
-          hasConfigs &&
-          types.every((val, i, arr) => val === arr[0]) &&
-          refs.every((val, i, arr) => val === arr[0]) &&
-          types[0] !== null &&
-          refs[0] !== null &&
-          types.length === this.option.trims.length
-        )
-          return types[0] + ' Off ' + refs[0]
-        return this[name + '_type_value']
+      getDiscountType(discount) {
+        if (this[discount] === null) return '% Off MSRP'
+        if (typeof this[discount] === 'string') return this[discount]
+        return this.listing_discount_type === '% Off MSRP'
+          ? 'percentage'
+          : 'currency'
       },
       getDiscount(name) {
         const hasConfigs = exists(this.configurations)
@@ -226,14 +235,13 @@
       findConfiguration(styleId) {
         return this[get.BID_CONFIG_BY_STYLE_ID](styleId)
       },
-      setValue(name, type, value) {
-        this[name + '_value'] = value
-        this[name + '_type_value'] = type
-        const newConfigValue = this.buildConfigObject(name, type, value)
-        this.$emit('update-config-many', {
-          value: newConfigValue,
-          styles: this.styles
-        })
+      setValue(discount, discountType, value) {
+        if (discountType === 'percentage') {
+          this[discount] = null
+          this.listing_discount_percent = value
+        } else {
+          this[discount] = value
+        }
       }
     }
   }

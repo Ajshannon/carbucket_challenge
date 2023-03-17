@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const base = 'api'
-const host = 'http://localhost:8888'
+const host = 'http://localhost:8000'
 const version = 'v1'
 const endpoint = resource => `${host}/${base}/${version}/${resource}`
 
@@ -13,18 +13,30 @@ const endpoint = resource => `${host}/${base}/${version}/${resource}`
  * @param {(* | null)} [config = null] - Config Axios
  */
 export async function fetch(action, resource, payload = null, config = null) {
-  const response = await axios[action](resource, payload, config)
+  const response = await axios[action](endpoint(resource), payload, config)
   return response.data
 }
 
 export default {
+  async login(data) {
+    return fetch('post', 'auth/login', data)
+  },
+  async logout() {
+    return fetch('post', 'auth/logout')
+  },
+  async register(data) {
+    return fetch('post', 'auth/users', data)
+  },
+  async getMe() {
+    return fetch('get', 'auth/me')
+  },
   async getBidOptions() {
-    return fetch('get', endpoint('bid/config/options'))
+    return fetch('get', 'bid/config/options')
   },
   async getBidConfigs() {
-    return fetch('get', endpoint('bid/config/index'))
+    return fetch('get', 'bid/config/index')
   },
   async postBidConfigs(data) {
-    return fetch('post', endpoint('bid/config/index'), data)
+    return fetch('post', 'bid/config/index', data)
   }
 }

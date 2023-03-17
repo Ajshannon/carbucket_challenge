@@ -10,16 +10,23 @@
     "start": "json-server --watch src/api/db.json"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.3.0",
+    "@fortawesome/fontawesome-svg-core": "^6.3.0",
+    "@fortawesome/free-solid-svg-icons": "^6.3.0",
+    "@fortawesome/vue-fontawesome": "^2.0.0",
     "axios": "^0.20.0",
     "concurrently": "^5.3.0",
     "core-js": "^3.6.5",
     "currency.js": "^2.0.3",
     "json-server": "^0.16.2",
+    "jsonwebtoken": "^9.0.0",
     "lodash": "^4.17.20",
+    "vee-validate": "^3.4.1",
     "vue": "^2.6.11",
     "vue-currency-input": "^1.22.3",
     "vue-router": "^3.2.0",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "yup": "^1.0.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -45,6 +52,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2.2",
+    "jsonwebtoken": "^9.0.0",
     "prettier": "^2.1.2",
     "prettier-config-standard": "^1.0.1",
     "prettier-standard": "^16.4.1",

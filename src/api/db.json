@@ -1,4 +1,36 @@
 {
+  "users": [
+    {
+      "id": 1,
+      "username": "johndoe",
+      "password": "secretpassword",
+      "email": "a@a.com"
+    },
+    {
+      "id": 2
+    },
+    {
+      "username": "frank",
+      "email": "anjoshannon@gmail.com",
+      "password": "castle",
+      "id": 3
+    },
+    {
+      "username": "frank",
+      "password": "castle",
+      "id": 4
+    },
+    {
+      "username": "frank",
+      "password": "castle",
+      "id": 5
+    },
+    {
+      "username": "frank",
+      "password": "castle",
+      "id": 6
+    }
+  ],
   "index": [
     {
       "id": 1,
@@ -112,6 +144,34 @@
         "type": "$",
         "ref": "MSRP",
         "value": 222
+      }
+    },
+    {
+      "id": 1679053293087,
+      "style_id": "ABC9",
+      "listing_discount": {
+        "ref": null,
+        "type": null,
+        "value": null
+      },
+      "bucket_discount": {
+        "type": "$",
+        "ref": "MSRP",
+        "value": 15
+      }
+    },
+    {
+      "id": 1679054895060,
+      "style_id": "ABC9",
+      "listing_discount": {
+        "type": "%",
+        "ref": "MSRP",
+        "value": 600000
+      },
+      "bucket_discount": {
+        "type": "$",
+        "ref": "MSRP",
+        "value": 1599
       }
     }
   ],

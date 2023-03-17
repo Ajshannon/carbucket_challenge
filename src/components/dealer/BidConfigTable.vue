@@ -41,7 +41,8 @@
       <bid-config-table-loader v-if="!hasOptions" :cols="10" />
       <tbody is="transition-group" name="fade" class="bid-config-table">
         <template v-for="option in sortedOptions">
-          <!-- <bid-config-table-model
+          <!-- Error below is taken care of by vue/no-v-for-template-key-on-child -->
+          <bid-config-table-model
             :key="option.year + option.model"
             :option="option"
             :configurations="getConfigurations(option)"
@@ -49,7 +50,7 @@
             :disabled="disabled"
             @toggle-hide="toggle"
             @update-config-many="updateConfigMany"
-          /> -->
+          />
           <bid-config-table-trim
             v-for="trim in option.trims"
             v-show="!modelHidden(option.year + option.model)"
@@ -75,7 +76,7 @@
   import { exists } from '@/utilities'
 
   // Components
-  // import BidConfigTableModel from '@/components/dealer/BidConfigTableModel'
+  import BidConfigTableModel from '@/components/dealer/BidConfigTableModel'
   import BidConfigTableTrim from '@/components/dealer/BidConfigTableTrim'
   import BidConfigTableLoader from '@/components/dealer/BidConfigTableLoader'
 
@@ -86,7 +87,7 @@
     name: 'BidConfigTable',
     components: {
       BidConfigTableLoader,
-      // BidConfigTableModel,
+      BidConfigTableModel,
       BidConfigTableTrim
     },
     props: {

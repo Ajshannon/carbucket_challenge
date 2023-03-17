@@ -1,3 +1,4 @@
 {
-  "/api/v1/bid/config/*": "/$1"
+  "/api/v1/bid/config/*": "/$1",
+  "/api/auth/*": "/$1"
 }

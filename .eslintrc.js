@@ -20,6 +20,7 @@ module.exports = {
   ],
   plugins: ['prettier', 'vue'],
   rules: {
+    "vue/no-v-for-template-key-on-child": "off",
     'import/extensions': [
       'error',
       {

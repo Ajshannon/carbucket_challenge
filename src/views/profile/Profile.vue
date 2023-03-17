@@ -1,27 +1,36 @@
 <template>
   <div class="container">
-    <header class="jumbotron">
-      <h3>
-        <strong>{{ currentUser.username }}</strong> Profile
-      </h3>
-    </header>
-    <p>
-      <strong>Token:</strong>
-      {{ currentUser.accessToken.substring(0, 20) }} ...
-      {{ currentUser.accessToken.substr(currentUser.accessToken.length - 20) }}
-    </p>
-    <p>
-      <strong>Id:</strong>
-      {{ currentUser.id }}
-    </p>
-    <p>
-      <strong>Email:</strong>
-      {{ currentUser.email }}
-    </p>
-    <strong>Authorities:</strong>
-    <ul>
-      <li v-for="role in currentUser.roles" :key="role">{{ role }}</li>
-    </ul>
+    <div class="jumbotron mt-5">
+      <h1 class="display-4">
+        {{
+          currentUser.username.charAt(0).toUpperCase() +
+          currentUser.username.slice(1)
+        }}'s Profile
+      </h1>
+      <hr class="my-4" />
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <h3>User Details</h3>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <strong>Token:</strong> {{ currentUser.accessToken }}
+          </li>
+          <li class="list-group-item">
+            <strong>Id:</strong> {{ currentUser.id }}
+          </li>
+          <li class="list-group-item">
+            <strong>Email:</strong> {{ currentUser.email }}
+          </li>
+          <li class="list-group-item">
+            <strong>Authorities:</strong>
+            <ul>
+              <li v-for="role in currentUser.roles" :key="role">{{ role }}</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -40,3 +49,9 @@
     }
   }
 </script>
+
+<style scoped>
+  .jumbotron {
+    background-color: #e9ecef;
+  }
+</style>

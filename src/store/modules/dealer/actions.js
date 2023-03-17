@@ -1,12 +1,12 @@
-import v1 from '@/api/v1'
 import { actor, get, mutator } from './constants'
 import { errorHandler, exists } from '@/utilities'
+
+import v1 from '@/api/v1'
 
 export default {
   async [actor.GET_BID_CONFIGS]({ commit }) {
     try {
       const configs = await v1.getBidConfigs()
-      console.dir(configs)
       commit(mutator.SET_CURRENT_BID_CONFIGS, configs)
     } catch (e) {
       errorHandler(e)

@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-template-key -->
 <template>
   <div class="table-responsive position-relative bg-white rounded">
     <table class="table table-bordered table-hover fixed table-sm">
@@ -6,7 +7,6 @@
           <th colspan="4" class="px-3 text-white font-weight-normal">
             Vehicle
           </th>
-          <!--<th colspan="3" class="px-3 text-white font-weight-normal">Advertised Price</th>-->
           <th colspan="3" class="px-3 text-white font-weight-normal">
             Buckets Price
           </th>
@@ -32,34 +32,38 @@
           <th class="text-center">Invoice</th>
           <th class="text-center">Discount</th>
           <th class="text-center">Discount&nbsp;Type</th>
-          <th class="text-center">MAAP</th>
-          <th class="text-center">Discount</th>
-          <th class="text-center">Discount&nbsp;Type</th>
+          <th colspan="2" class="text-center">Buckets Price</th>
           <th class="text-center">Final Price</th>
         </tr>
       </thead>
+
       <bid-config-table-loader v-if="!hasOptions" :cols="10" />
       <tbody is="transition-group" name="fade" class="bid-config-table">
-        <template v-for="option in sortedOptions">
-          <!-- <bid-config-table-model
+        <template>
+          <div
+            v-for="option in sortedOptions"
             :key="option.year + option.model"
-            :option="option"
-            :configurations="getConfigurations(option)"
-            :toggled="modelHidden(option.year + option.model)"
-            :disabled="disabled"
-            @toggle-hide="toggle"
-            @update-config-many="updateConfigMany"
-          /> -->
-          <bid-config-table-trim
-            v-for="trim in option.trims"
-            v-show="!modelHidden(option.year + option.model)"
-            :key="option.model + trim.style_id"
-            :trim="trim"
-            :configuration="findConfiguration(trim.style_id)"
-            :data-model="option.year + option.model"
-            :disabled="disabled"
-            @update-config="updateConfig"
-          />
+          >
+            <bid-config-table-model
+              :key="option.year + option.model"
+              :option="option"
+              :configurations="getConfigurations(option)"
+              :toggled="modelHidden(option.year + option.model)"
+              :disabled="disabled"
+              @toggle-hide="toggle"
+              @update-config-many="updateConfigMany"
+            />
+            <bid-config-table-trim
+              v-for="trim in option.trims"
+              v-show="!modelHidden(option.year + option.model)"
+              :key="trim.style_id"
+              :trim="trim"
+              :configuration="findConfiguration(trim.style_id)"
+              :data-model="option.year + option.model"
+              :disabled="disabled"
+              @update-config="updateConfig"
+            />
+          </div>
         </template>
       </tbody>
     </table>
@@ -75,7 +79,7 @@
   import { exists } from '@/utilities'
 
   // Components
-  // import BidConfigTableModel from '@/components/dealer/BidConfigTableModel'
+  import BidConfigTableModel from '@/components/dealer/BidConfigTableModel'
   import BidConfigTableTrim from '@/components/dealer/BidConfigTableTrim'
   import BidConfigTableLoader from '@/components/dealer/BidConfigTableLoader'
 
@@ -86,7 +90,7 @@
     name: 'BidConfigTable',
     components: {
       BidConfigTableLoader,
-      // BidConfigTableModel,
+      BidConfigTableModel,
       BidConfigTableTrim
     },
     props: {

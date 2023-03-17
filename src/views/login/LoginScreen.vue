@@ -6,16 +6,30 @@
         src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
         class="profile-img-card"
       />
-      <Form @submit="handleLogin" :validation-schema="schema">
+      <form @submit.prevent="handleLogin">
         <div class="form-group">
           <label for="username">Username</label>
-          <Field name="username" type="text" class="form-control" />
-          <ErrorMessage name="username" class="error-feedback" />
+          <input
+            name="username"
+            type="text"
+            class="form-control"
+            v-model="username"
+          />
+          <div v-if="usernameError" class="error-feedback">
+            {{ usernameError }}
+          </div>
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <Field name="password" type="password" class="form-control" />
-          <ErrorMessage name="password" class="error-feedback" />
+          <input
+            name="password"
+            type="password"
+            class="form-control"
+            v-model="password"
+          />
+          <div v-if="passwordError" class="error-feedback">
+            {{ passwordError }}
+          </div>
         </div>
 
         <div class="form-group">
@@ -33,22 +47,16 @@
             {{ message }}
           </div>
         </div>
-      </Form>
+      </form>
     </div>
   </div>
 </template>
 
 <script>
-  import { Form, Field, ErrorMessage } from 'vee-validate'
   import * as yup from 'yup'
 
   export default {
     name: 'Login',
-    components: {
-      Form,
-      Field,
-      ErrorMessage
-    },
     data() {
       const schema = yup.object().shape({
         username: yup.string().required('Username is required!'),
@@ -58,6 +66,10 @@
       return {
         loading: false,
         message: '',
+        username: '',
+        password: '',
+        usernameError: '',
+        passwordError: '',
         schema
       }
     },
@@ -72,23 +84,43 @@
       }
     },
     methods: {
-      handleLogin(user) {
+      handleLogin() {
+        this.usernameError = ''
+        this.passwordError = ''
+
+        if (!this.username) {
+          this.usernameError = 'Username is required!'
+        }
+
+        if (!this.password) {
+          this.passwordError = 'Password is required!'
+        }
+
+        if (this.usernameError || this.passwordError) {
+          return
+        }
+
         this.loading = true
 
-        this.$store.dispatch('auth/login', user).then(
-          () => {
-            this.$router.push('/profile')
-          },
-          error => {
-            this.loading = false
-            this.message =
-              (error.response &&
-                error.response.data &&
-                error.response.data.message) ||
-              error.message ||
-              error.toString()
-          }
-        )
+        this.$store
+          .dispatch('auth/login', {
+            username: this.username,
+            password: this.password
+          })
+          .then(
+            () => {
+              this.$router.push('/profile')
+            },
+            error => {
+              this.loading = false
+              this.message =
+                (error.response &&
+                  error.response.data &&
+                  error.response.data.message) ||
+                error.message ||
+                error.toString()
+            }
+          )
       }
     }
   }

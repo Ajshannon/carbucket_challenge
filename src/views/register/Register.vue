@@ -6,22 +6,41 @@
         src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
         class="profile-img-card"
       />
-      <Form @submit="handleRegister" :validation-schema="schema">
+      <form @submit.prevent="handleRegister">
         <div v-if="!successful">
           <div class="form-group">
             <label for="username">Username</label>
-            <Field name="username" type="text" class="form-control" />
-            <ErrorMessage name="username" class="error-feedback" />
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              v-model="username"
+            />
+            <div v-if="usernameError" class="error-feedback">
+              {{ usernameError }}
+            </div>
           </div>
           <div class="form-group">
             <label for="email">Email</label>
-            <Field name="email" type="email" class="form-control" />
-            <ErrorMessage name="email" class="error-feedback" />
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              v-model="email"
+            />
+            <div v-if="emailError" class="error-feedback">{{ emailError }}</div>
           </div>
           <div class="form-group">
             <label for="password">Password</label>
-            <Field name="password" type="password" class="form-control" />
-            <ErrorMessage name="password" class="error-feedback" />
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              v-model="password"
+            />
+            <div v-if="passwordError" class="error-feedback">
+              {{ passwordError }}
+            </div>
           </div>
 
           <div class="form-group">
@@ -34,7 +53,7 @@
             </button>
           </div>
         </div>
-      </Form>
+      </form>
 
       <div
         v-if="message"
@@ -48,16 +67,10 @@
 </template>
 
 <script>
-  import { ErrorMessage, Field, Form } from 'vee-validate'
   import * as yup from 'yup'
 
   export default {
     name: 'Register',
-    components: {
-      Form,
-      Field,
-      ErrorMessage
-    },
     data() {
       const schema = yup.object().shape({
         username: yup

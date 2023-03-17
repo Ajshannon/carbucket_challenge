@@ -14,10 +14,10 @@
               type="text"
               class="form-control"
               id="username"
-              v-model="username"
+              v-model="formData.username"
             />
-            <div v-if="usernameError" class="error-feedback">
-              {{ usernameError }}
+            <div v-if="errors.usernameError" class="error-feedback">
+              {{ errors.usernameError }}
             </div>
           </div>
           <div class="form-group">
@@ -26,9 +26,11 @@
               type="email"
               class="form-control"
               id="email"
-              v-model="email"
+              v-model="formData.email"
             />
-            <div v-if="emailError" class="error-feedback">{{ emailError }}</div>
+            <div v-if="errors.emailError" class="error-feedback">
+              {{ errors.emailError }}
+            </div>
           </div>
           <div class="form-group">
             <label for="password">Password</label>
@@ -36,10 +38,10 @@
               type="password"
               class="form-control"
               id="password"
-              v-model="password"
+              v-model="formData.password"
             />
-            <div v-if="passwordError" class="error-feedback">
-              {{ passwordError }}
+            <div v-if="errors.passwordError" class="error-feedback">
+              {{ errors.passwordError }}
             </div>
           </div>
 
@@ -68,6 +70,7 @@
 
 <script>
   import * as yup from 'yup'
+  import { mapActions } from 'vuex'
 
   export default {
     name: 'Register',
@@ -94,7 +97,17 @@
         successful: false,
         loading: false,
         message: '',
-        schema
+        schema,
+        formData: {
+          username: '',
+          email: '',
+          password: ''
+        },
+        errors: {
+          usernameError: '',
+          emailError: '',
+          passwordError: ''
+        }
       }
     },
     computed: {
@@ -108,28 +121,66 @@
       }
     },
     methods: {
-      handleRegister(user) {
+      ...mapActions('auth', ['register']),
+      handleRegister() {
         this.message = ''
         this.successful = false
         this.loading = true
 
-        this.$store.dispatch('auth/register', user).then(
-          data => {
+        this.schema
+          .validate(this.formData, { abortEarly: false })
+          .then(() => {
+            this.errors = {}
+            return this.register(this.formData)
+          })
+          .then(data => {
             this.message = data.message
             this.successful = true
             this.loading = false
-          },
-          error => {
-            this.message =
-              (error.response &&
-                error.response.data &&
-                error.response.data.message) ||
-              error.message ||
-              error.toString()
+            this.$router.push('/login')
+          })
+          .catch(err => {
+            const errors = {}
+            if (err.inner) {
+              err.inner.forEach(e => {
+                errors[e.path] = e.message
+              })
+            }
+            this.errors = errors
             this.successful = false
             this.loading = false
-          }
-        )
+          })
+      }
+    },
+    watch: {
+      'formData.username'(value) {
+        if (value.length < 3) {
+          this.errors.usernameError = 'Must be at least 3 characters!'
+        } else if (value.length > 20) {
+          this.errors.usernameError = 'Must be maximum 20 characters!'
+        } else {
+          this.errors.usernameError = ''
+        }
+      },
+      'formData.email'(value) {
+        if (!value) {
+          this.errors.emailError = 'Email is required!'
+        } else if (!/\S+@\S+\.\S+/.test(value)) {
+          this.errors.emailError = 'Email is invalid!'
+        } else if (value.length > 50) {
+          this.errors.emailError = 'Must be maximum 50 characters!'
+        } else {
+          this.errors.emailError = ''
+        }
+      },
+      'formData.password'(value) {
+        if (value.length < 6) {
+          this.errors.passwordError = 'Must be at least 6 characters!'
+        } else if (value.length > 40) {
+          this.errors.passwordError = 'Must be maximum 40 characters!'
+        } else {
+          this.errors.passwordError = ''
+        }
       }
     }
   }

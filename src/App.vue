@@ -4,13 +4,13 @@
       <a href="/" class="navbar-brand">carbucket</a>
       <div class="navbar-nav mr-auto">
         <li class="nav-item">
-          <router-link to="/home" class="nav-link">
-            <font-awesome-icon icon="home" /> Home
+          <router-link v-if="currentUser" to="/home" class="nav-link">
+            <font-awesome-icon icon="home" />
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/pricing" class="nav-link">
-            <font-awesome-icon icon="home" /> Dashboard
+          <router-link v-if="currentUser" to="/pricing" class="nav-link">
+            <font-awesome-icon icon="face-grimace" /> Dashboard
           </router-link>
         </li>
         <!-- <li v-if="showAdminBoard" class="nav-item">

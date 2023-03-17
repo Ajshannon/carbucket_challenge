@@ -1,23 +1,23 @@
 {
-  "authenticate": [
+  "users": [
     {
       "id": 1,
       "username": "johndoe",
-      "password": "secretpassword"
+      "password": "secretpassword",
+      "email": "a@a.com"
     },
     {
-      "username": "johndoe",
-      "password": "secretpassword",
       "id": 2
     },
     {
-      "username": "happy",
-      "password": "gilmore",
+      "username": "frank",
+      "email": "anjoshannon@gmail.com",
+      "password": "castle",
       "id": 3
     },
     {
-      "username": "happy",
-      "password": "gilmore",
+      "username": "frank",
+      "password": "castle",
       "id": 4
     },
     {
@@ -26,14 +26,9 @@
       "id": 5
     },
     {
-      "username": "aj",
-      "password": "shannon",
+      "username": "frank",
+      "password": "castle",
       "id": 6
-    },
-    {
-      "username": "a",
-      "password": "b",
-      "id": 7
     }
   ],
   "index": [

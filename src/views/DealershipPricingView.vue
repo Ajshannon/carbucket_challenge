@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p>DealershipPricingView is working</p>
     <div class="px-4 py-3 mb-5">
       <div class="row align-items-center justify-content-between">
         <h4 class="text-muted font-weight-normal m-0">Bid Configuration</h4>

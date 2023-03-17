@@ -26,6 +26,7 @@ export const auth = {
       commit('logout')
     },
     register({ commit }, user) {
+      console.log('auth.module.js is working')
       return AuthService.register(user).then(
         response => {
           commit('registerSuccess')
@@ -42,20 +43,26 @@ export const auth = {
     loginSuccess(state, user) {
       state.status.loggedIn = true
       state.user = user
+      localStorage.setItem('user', JSON.stringify(user)) // add user to local storage
+      console.log('login was a success')
     },
     loginFailure(state) {
       state.status.loggedIn = false
       state.user = null
+      console.log('login was a failure')
     },
     logout(state) {
       state.status.loggedIn = false
       state.user = null
+      localStorage.removeItem(user) // remove user on logout
     },
     registerSuccess(state) {
       state.status.loggedIn = false
+      console.log('registration was a success')
     },
     registerFailure(state) {
       state.status.loggedIn = false
+      console.log('registration was a failure')
     }
   }
 }
